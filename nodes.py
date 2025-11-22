@@ -301,3 +301,36 @@ def chat_node(state: AgentState) -> Dict[str, Any]:
 
     return {"messages": [response]}
 
+def summarize_conversation(state: AgentState) -> Dict[str, Any]:
+    """Summarizes the conversation and removes old messages to save memory """
+    llm = get_llm()
+    summary = state.get("summary", "")
+    messages = state["messages"]
+
+    if summary:
+        summary_prompt = f"Previous summary: {summary}\n\nNew lines of conversation:\n"
+    else:
+        summary_prompt = "Summarize the conversation so far:\n"
+
+    # Create prompt for summarization
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "Distill the following conversation into a concise summary."),
+        ("user", summary_prompt),
+        MessagesPlaceholder(variable_name="messages"),
+    ])
+
+    chain = prompt | llm
+    res = chain.invoke({"messages": messages})
+    new_summary = res.content
+
+    # Keep last 2 messages
+    cutoff = max(0, len(messages) - 2)
+    while cutoff > 0 and isinstance(messages[cutoff], ToolMessage):
+        cutoff -= 1
+
+    delete_messages = [RemoveMessage(id=m.id) for m in messages[:cutoff]]
+
+    return {
+        "summary": new_summary,
+        "messages": delete_messages
+    }
