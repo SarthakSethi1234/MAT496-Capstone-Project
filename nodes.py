@@ -124,3 +124,25 @@ def perform_search(query: str, source_type: str) -> List[ResearchEvidence]:
             metadata={"title": res.get("title", "")}
         ))
     return evidence
+
+# Now we will define three parallel research agents that gather information from different sources. they all  willrun parallely in the research subgraph.
+
+def researcher_amazon(state: AgentState) -> Dict[str, Any]:
+    """Searches Amazon and e-commerce reviews."""
+    product_query = state.get("product_query") or state.get("product_link", "product")
+    evidence = perform_search(product_query, "amazon")
+    return {"research_evidence": evidence}
+
+
+def researcher_reddit(state: AgentState) -> Dict[str, Any]:
+    """Searches Reddit for real opinions."""
+    product_query = state.get("product_query") or state.get("product_link", "product")
+    evidence = perform_search(product_query, "reddit")
+    return {"research_evidence": evidence}
+
+
+def researcher_web(state: AgentState) -> Dict[str, Any]:
+    """Searches general web for blogs and videos."""
+    product_query = state.get("product_query") or state.get("product_link", "product")
+    evidence = perform_search(product_query, "web")
+    return {"research_evidence": evidence}
