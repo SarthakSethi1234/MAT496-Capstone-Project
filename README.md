@@ -64,7 +64,7 @@ Make a short -  3-5 min video of yourself, put it on youtube/googledrive, and pu
 I plan to execute these steps to complete my project.
 
 - [DONE] **Step 1: Install dependencies required for the project and create `state.py` to define the states required for the application. They will act like custom data strcutures which are used to store information between nodes.
-- [TO-DO] **Step 2: Create `nodes.py` and implement all the nodes logic one by one. Implement the parse_link node which will parse the product link and extract the product name.
+- [DONE] **Step 2: Create `nodes.py` and implement all the nodes logic one by one. Implement the parse_link node which will parse the product link and extract the product name.
 - [TO-DO] **Step 3: Implement three distinct researcher functions and wire them to run in parallel.
 - [TO-DO] **Step 4: Implement the nodes to process the data gathered by the researchers and extract the pros, cons, and final conclusion.
 - [TO-DO] **Step 5: Implement the node that will synthesize all the analyzed data into a clean, professional Markdown report, acting as the final output of the research phase.
