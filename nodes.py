@@ -32,3 +32,46 @@ def get_tavily():
     """Returns the Tavily client."""
     api_key = os.environ.get("TAVILY_API_KEY")
     return TavilyClient(api_key=api_key)
+
+def parse_link(state: AgentState) -> Dict[str, Any]:
+    """Extracts product name/metadata from the link using BeautifulSoup + LLM."""
+    # gets the url from the state
+    link = state["product_link"]
+
+    # we used headers here because some websites block requests without them
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'en-US,en;q=0.9'
+    }
+    response = requests.get(link, headers=headers, timeout=10)
+
+    # we check if we were able to download the HTML of the product page (Status 200 = Success)
+    if response.status_code != 200:
+        return {"product_query": None}
+
+    # We use BeautifulSoup to parse the HTML and extract the <title> of the product from it
+    soup = BeautifulSoup(response.content, 'html.parser')
+    title = soup.title.string if soup.title else ""
+
+    # Specific logic for Amazon to get cleaner titles
+    if "amazon" in link:
+        product_title_elem = soup.find("span", {"id": "productTitle"})
+        if product_title_elem:
+            title = product_title_elem.get_text().strip()
+
+    if not title:
+        return {"product_query": None}
+
+    # The title often has extra stuff so here we use LLM to extract just the title.
+    llm = get_llm()
+    if llm:
+        prompt = ChatPromptTemplate.from_template(
+            "Extract the precise product name from this webpage title. Return ONLY the product name, no extra text.\nTitle: {title}"
+        )
+        chain = prompt | llm
+        product_name = chain.invoke({"title": title}).content.strip()
+    else:
+        product_name = title[:100]
+
+    print(f"Identified Product: {product_name}")
+    return {"product_query": product_name}
