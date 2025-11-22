@@ -146,3 +146,34 @@ def researcher_web(state: AgentState) -> Dict[str, Any]:
     product_query = state.get("product_query") or state.get("product_link", "product")
     evidence = perform_search(product_query, "web")
     return {"research_evidence": evidence}
+
+def harvest_reviews(state: AgentState) -> Dict[str, Any]:
+    """Analyzes sentiment and topics using LLM."""
+
+    # Check if we have evidence
+    if not state['research_evidence']:
+        return {"reviews_analysis": None}
+
+
+    llm = get_llm()
+
+    evidence_text = "\n".join([f"[{e['source']}] {e['content']}" for e in state['research_evidence']])
+
+    prompt = ChatPromptTemplate.from_template(
+        """Analyze the following product research evidence and extract sentiment insights.
+        Return a valid JSON object with keys: positive_topics (list), negative_topics (list), 
+        rating_distribution (dict 1-5 stars, estimate if needed), average_rating (float), total_reviews (int estimate).
+
+        Evidence:
+        {evidence}
+        """
+    )
+    chain = prompt | llm
+    try:
+        res = chain.invoke({"evidence": evidence_text[:10000]})
+        content = clean_json(res.content)
+        data = json.loads(content)
+        return {"reviews_analysis": data}
+    except Exception as e:
+        print(f"Error in harvesting reviews: {e}")
+        return {"reviews_analysis": None}
