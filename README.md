@@ -70,7 +70,7 @@ I plan to execute these steps to complete my project.
 - [DONE] **Step 5: Implement the node that will synthesize all the analyzed data into a clean, professional Markdown report, acting as the final output of the research phase.
 - [DONE] **Step 6: Connect the research subgraph with the main graph and all other nodes in the `graph.py`.
 - [DONE] **Step 7: Implement a node that will handle the chat logic and bind a web search tool to handle follow-up questions. Also implement a node that will summarize the history when the number of messages exceeds 5. Also implement MemorySaver to save the chat history.
-- [TO-DO] **Step 8: Build a simple web UI using Streamlit to interact with the agent in `web_ui.py`.
+- [DONE] **Step 8: Build a simple web UI using Streamlit to interact with the agent in `web_ui.py`.
 
 ## Conclusion:
 
