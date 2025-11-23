@@ -46,6 +46,24 @@ I further used streamlit to make a simple UI (which was completely made with the
 
 ## Reason for picking up this project
 
+I picked this project for two main reasons. First, I wanted a practical way to revise everything I learned in the LangGraph course. Instead of just watching videos, I wanted to try to apply the concepts and things that I've learned in the duration of this course even if it meant making a simple RAG application like mine.
+
+I also wanted to build something useful. We all spend too much time and efforts on reading reviews on multiple websites, consulting different people and analyzing products before buying. By automating this with an agent that can read hundreds of reviews in seconds using RAG and generate a useful report based on these reviews, I solved a real-world problem ( simple yet existent)  while using LangGraph, Tool calls, RAG, Agentic workflows etc
+
+Further this projects completely lines up with everything that I learned in this course and here are some annotations that demonstrate that:
+
+1. LangGraph (State, Node, Graph): This workflow is built with the help of it where the logic is split into modular nodes which are connected with each other using concrete or conditional edges.
+2. SubGraphs: Particularly, I isolated the research part into a subgraph of its own and integrated it with the main graph.
+3. MapReduce(Parallelization): To make the execution faster I, instead of running analysts one after the other, I ran them in parallel using Send API of LangGrAPH.
+4. Prompting: My researcher nodes and the report generator node uses a detailed prompt template so that we get desired output and not generic stuff.
+5. Structured Output: A Structured Output layer then forces all results into clean JSON/Pydantic formats producing consistent and readable reports.
+6. Tool Calling LLMs: The chat node is connected with a web search tool which helps my LLM to search the web for some information which is related to some other product or it is not mentioned in the report.
+7. Semantic Search: I used semantic search inside the Research Engine sub-graph, where each analyst’s query is matched to contextually relevant web results before being summarized.
+8. RAG : I used RAG in the analyst research workflow, where retrieved web data and summaries are fed back into the graph as grounded context before the analysts generate their final insights.
+9. LangSmith tracing: I used @trace function decorator to trace the working of few nodes in LangSmith dashboard.
+10. Persistence: I used persistence to save the graph’s state, so the system can pause and continue later without starting over with this I also used summarizer so that our context doesnt become very long.
+11. MemorySaver: I used MemorySaver to save temporary steps of the graph onto the disk. This reduces memory load, prevents crashes during heavy tasks, and keeps the whole system running smoothly even when multiple analysts are working at the same time.
+
 ## Video Summary Link: 
 
 Make a short -  3-5 min video of yourself, put it on youtube/googledrive, and put its link in your README.md.
@@ -63,14 +81,14 @@ Make a short -  3-5 min video of yourself, put it on youtube/googledrive, and pu
 
 I plan to execute these steps to complete my project.
 
-- [DONE] **Step 1: Install dependencies required for the project and create `state.py` to define the states required for the application. They will act like custom data strcutures which are used to store information between nodes.
-- [DONE] **Step 2: Create `nodes.py` and implement all the nodes logic one by one. Implement the parse_link node which will parse the product link and extract the product name.
-- [DONE] **Step 3: Implement three distinct researcher functions and wire them to run in parallel.
-- [DONE] **Step 4: Implement the nodes to process the data gathered by the researchers and extract the pros, cons, and final conclusion.
-- [DONE] **Step 5: Implement the node that will synthesize all the analyzed data into a clean, professional Markdown report, acting as the final output of the research phase.
-- [DONE] **Step 6: Connect the research subgraph with the main graph and all other nodes in the `graph.py`.
-- [DONE] **Step 7: Implement a node that will handle the chat logic and bind a web search tool to handle follow-up questions. Also implement a node that will summarize the history when the number of messages exceeds 5. Also implement MemorySaver to save the chat history.
-- [DONE] **Step 8: Build a simple web UI using Streamlit to interact with the agent in `web_ui.py`.
+- [DONE] Step 1: Install dependencies required for the project and create `state.py` to define the states required for the application. They will act like custom data strcutures which are used to store information between nodes.
+- [DONE] Step 2: Create `nodes.py` and implement all the nodes logic one by one. Implement the parse_link node which will parse the product link and extract the product name.
+- [DONE] Step 3: Implement three distinct researcher functions and wire them to run in parallel.
+- [DONE] Step 4: Implement the nodes to process the data gathered by the researchers and extract the pros, cons, and final conclusion.
+- [DONE] Step 5: Implement the node that will synthesize all the analyzed data into a clean, professional Markdown report, acting as the final output of the research phase.
+- [DONE] Step 6: Connect the research subgraph with the main graph and all other nodes in the `graph.py`.
+- [DONE] Step 7: Implement a node that will handle the chat logic and bind a web search tool to handle follow-up questions. Also implement a node that will summarize the history when the number of messages exceeds 5. Also implement MemorySaver to save the chat history.
+- [DONE] Step 8: Build a simple web UI using Streamlit to interact with the agent in `web_ui.py`.
 
 ## Conclusion:
 
