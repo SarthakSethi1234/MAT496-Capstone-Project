@@ -44,6 +44,10 @@ The system uses LangGraph to manage a team of parallel research agents. It simul
 
 I further used streamlit to make a simple UI (which was completely made with the help of AI) to present my project in a better way so that it looks interactive and the reports are easy to read and analyse. 
 
+## Workflow:
+
+![Screenshot](screenshots/product_research_workflow.png)
+
 ## Reason for picking up this project
 
 I picked this project for two main reasons. First, I wanted a practical way to revise everything I learned in the LangGraph course. Instead of just watching videos, I wanted to try to apply the concepts and things that I've learned in the duration of this course even if it meant making a simple RAG application like mine.
