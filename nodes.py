@@ -33,7 +33,7 @@ def get_tavily():
     api_key = os.environ.get("TAVILY_API_KEY")
     return TavilyClient(api_key=api_key)
 
-@trace
+@traceable
 def parse_link(state: AgentState) -> Dict[str, Any]:
     """Extracts product name/metadata from the link using BeautifulSoup + LLM."""
     # gets the url from the state
@@ -77,7 +77,7 @@ def parse_link(state: AgentState) -> Dict[str, Any]:
     print(f"Identified Product: {product_name}")
     return {"product_query": product_name}
 
-@trace
+@traceable
 def fallback_title_extractor(state: AgentState) -> Dict[str, Any]:
     """This node is a backup plan if parse_link() fails to extract the product name. It tries to guess the product name from the URL structure itself."""
     link = state["product_link"]
@@ -97,7 +97,7 @@ def fallback_title_extractor(state: AgentState) -> Dict[str, Any]:
 # Research Subgraph Nodes
 
 # This is the core search function used by all three researchers (Amazon, Reddit, Web). It uses the Tavily API to find relevant information about the product.
-@trace
+@traceable
 def perform_search(query: str, source_type: str) -> List[ResearchEvidence]:
     """Performs search and returns list of ResearchEvidence."""
 
@@ -148,7 +148,7 @@ def researcher_web(state: AgentState) -> Dict[str, Any]:
     evidence = perform_search(product_query, "web")
     return {"research_evidence": evidence}
 
-@trace
+@traceable
 def harvest_reviews(state: AgentState) -> Dict[str, Any]:
     """Analyzes sentiment and topics using LLM."""
 
@@ -180,7 +180,7 @@ def harvest_reviews(state: AgentState) -> Dict[str, Any]:
         print(f"Error in harvesting reviews: {e}")
         return {"reviews_analysis": None}
 
-@trace
+@traceable
 def generate_report(state: AgentState) -> Dict[str, Any]:
     """Generates the final markdown-formatted report using LLM."""
     print("--- Generating Report ---")
@@ -269,7 +269,7 @@ def generate_report(state: AgentState) -> Dict[str, Any]:
 
 # Chat Nodes & Persistence Stage
 
-@trace
+@traceable
 def chat_node(state: AgentState) -> Dict[str, Any]:
     """Answers user questions based on the generated report and web search."""
     llm = get_llm()
@@ -305,7 +305,7 @@ def chat_node(state: AgentState) -> Dict[str, Any]:
 
     return {"messages": [response]}
 
-@trace
+@traceable
 def summarize_conversation(state: AgentState) -> Dict[str, Any]:
     """Summarizes the conversation and removes old messages to save memory """
     llm = get_llm()
